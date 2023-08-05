@@ -1,24 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import Navbar from './navigation-bar/components/index';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import About from './pages/about';
+import Events from './pages/events';
+import React, { useState } from 'react';
+import Login from './components/Login/Login';
 
 function App() {
+
+  const [token, setToken] = useState();
+
+  if(token) {
+    return <Login setToken={setToken} />
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+      <Navbar />
+      <Routes>
+        <Route path='/events' element={<Events/>} />
+        <Route path="/about" element={<About/>}></Route>
+        <Route path="/signin" element={<Login/>}></Route>
+      </Routes>
+    </Router>
   );
 }
 
