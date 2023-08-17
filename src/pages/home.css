@@ -37,4 +37,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}
+  }
+  
+  .selectMonth {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    align-items: center;
+  }
+
+  .month {
+    margin-top: 80px;
+  }
+
+  .hidden { display:none; }
