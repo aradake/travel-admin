@@ -40,7 +40,8 @@ const Home = () => {
       return [
         { value: 'eid', label: 'Employee Id' },
         { value: 'empcode', label: 'Employee Code' },
-        { value: 'name', label: 'Employee Name' }
+        { value: 'name', label: 'Employee Name' },
+        { value: 'all', label: 'All' }
       ];
     }
     if(isDesignation) {
@@ -51,6 +52,14 @@ const Home = () => {
   }
 
   const [selected, setSelected] = useState(null);
+
+  const [input, setInput] = useState(null);
+
+  const handleInput = event => {
+    setInput(event.target.value);
+
+    console.log('value is:', event.target.value);
+  };
 
   const handleChange = (selectedOption) => {
     setSelected(selectedOption);
@@ -72,10 +81,10 @@ const Home = () => {
   };
 
   const onSubmit = () => {
-    
     if(!selected || !selectedMonth || !selectedYear)
       return;
-    navigate('/events');
+    const data = {selected: selected.value, selectedMonth: selectedMonth.value, selectedYear: selectedYear.value, input:input};
+    navigate('/events', {state:data});
      //render(<label class="row submit-wrapper">We are Happy..!</label>); 
   }
 
@@ -91,7 +100,8 @@ const Home = () => {
     <div class="selectMonth" className={!isEmployee? 'hidden' : undefined}>
     <label>
           <p>Input</p>
-          <input type="text" />
+          <input type="text" onChange={handleInput}
+        value={input}/>
     </label>
     </div>
     <div class="selectMonth">
