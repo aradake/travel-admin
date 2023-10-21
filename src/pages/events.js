@@ -28,6 +28,7 @@ const Events = () => {
 
   return (
       <div className="App">
+          <h5>Employee : {location.state.input == null ?  'All' : location.state.input}</h5>
           <table>
               <tr>
                   <th className="header">Date</th>
