@@ -12,12 +12,12 @@
    font-size: 24px;
   }
   .left {
-    margin-right: 25px;
-    margin-left: 25px;
+     margin-right: 105px; 
+    margin-left: 105px;
   }
   .right {
-    margin-right: 25px;
-    margin-left: 25px;
+    margin-right: 105px;
+    margin-left: 205px;
   }
   .tile {
     margin-top: 50px;

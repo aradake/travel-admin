@@ -4,6 +4,7 @@ import './home.css';
 import { render } from '@testing-library/react';
 import Events from './events';
 import {Link, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
+import { result } from 'lodash';
 
 
 const Home = () => {
@@ -38,20 +39,19 @@ const Home = () => {
     }
     if(isEmployee) {
       return [
-        { value: 'eid', label: 'Employee Id' },
-        { value: 'empcode', label: 'Employee Code' },
         { value: 'name', label: 'Employee Name' },
         { value: 'all', label: 'All' }
       ];
     }
     if(isDesignation) {
-      return [
-        { value: 'designation', label: 'Designation' }
-      ];
     }
   }
 
+  const [emploeeNameOptions, setEmploeeNameOptions] = useState([]);
+
   const [selected, setSelected] = useState(null);
+
+  const [selectedEmployeeName, setSelectedEmployeeName] = useState(null);
 
   const [input, setInput] = useState(null);
 
@@ -65,6 +65,11 @@ const Home = () => {
     setSelected(selectedOption);
     console.log(`Option selected:`, selectedOption);
   };
+
+  const handleEmployeeNameChange = (selectedOption) => {
+    setSelectedEmployeeName(selectedOption);
+    console.log(`Employee Name selected:`, selectedOption);
+  }
 
   const [selectedMonth, setSelectedMonth] = useState(null);
 
@@ -83,26 +88,47 @@ const Home = () => {
   const onSubmit = () => {
     if(!selected || !selectedMonth || !selectedYear)
       return;
-    const data = {selected: selected.value, selectedMonth: selectedMonth.value, selectedYear: selectedYear.value, input:input};
+    const data = {selected: selected.value, selectedMonth: selectedMonth.value, selectedYear: selectedYear.value, input: selectedEmployeeName == null ? null : selectedEmployeeName.value};
     navigate('/events', {state:data});
-     //render(<label class="row submit-wrapper">We are Happy..!</label>); 
   }
+
+  useEffect(() => {
+
+  const getEmployeeNames = async () => {
+    const requestOptions = {
+      method: 'GET'
+    };
+  
+    const response = await fetch('https://travel-tracker-390818.el.r.appspot.com/api/td/us1/travel/employeeNames', requestOptions)
+    const json = await response.json();
+    var i = json.length;
+    console.log('Names size = '+ i);
+
+    let result = [];
+
+    for(let k = 0; k < json.length; k++){   
+            result.push({
+            "value":json[k],
+            "label":json[k]
+        })
+    }
+    console.log('Names result = '+ result);
+    setEmploeeNameOptions(result);
+    return result
+  };
+  getEmployeeNames();
+}, []);
 
   return (
     <div>
       <div class="row">
         <button class="left tile" onClick={() => {setIsEmployee(false);setIsDesignation(false);setIsVehicle(true);}} disabled={!isVehicle}>Vehicle Type</button>
-        <button class="centre tile" onClick={() => {setIsVehicle(false);setIsDesignation(false);setIsEmployee(true);}} disabled={!isEmployee}>Employee</button>
-        <button class="right tile" onClick={() => {setIsEmployee(false);setIsVehicle(false);setIsDesignation(true);}} disabled={!isDesignation}>Designation</button>
+        <button class="right tile" onClick={() => {setIsVehicle(false);setIsDesignation(false);setIsEmployee(true);}} disabled={!isEmployee}>Employee</button>
       </div>
     <Select options={getOptions()} onChange={handleChange}>
     </Select>
     <div class="selectMonth" className={!isEmployee? 'hidden' : undefined}>
-    <label>
-          <p>Input</p>
-          <input type="text" onChange={handleInput}
-        value={input}/>
-    </label>
+    <Select options={emploeeNameOptions} className={!isEmployee? 'hidden' : undefined} onChange={handleEmployeeNameChange}></Select>
     </div>
     <div class="selectMonth">
     <Select class="month" options={getMonth} onChange={handleMonthChange}>
